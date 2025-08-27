@@ -7,21 +7,34 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-@WebServlet("/registration")
-public class RegistrationServlet extends HttpServlet {
+
+
+@WebServlet("/signup")
+public class SignUpServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getServletContext().getRequestDispatcher("/pages/registration.jsp").forward(req, resp);
+        req.getServletContext().getRequestDispatcher("/pages/signup.jsp").forward(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        Account account;
+
         String username = req.getParameter("username");
-        req.setAttribute("username", username);
+
         String password = req.getParameter("password");
-        req.setAttribute("password", password);
+
         String confirmPassword = req.getParameter("confirmPassword");
-        req.setAttribute("confirmPassword", confirmPassword);
-        req.getServletContext().getRequestDispatcher("/pages/registration.jsp").forward(req, resp);
+
+        if(!password.equals(confirmPassword)){
+            req.setAttribute("error", "Passwords do not match");
+        }
+        else {
+            account = new Account(username, password);
+            PostgreSQLService postgreSQLService = new PostgreSQLService();
+            String message = postgreSQLService.addAccount(account);
+        }
+
+        req.getServletContext().getRequestDispatcher("/pages/signup.jsp").forward(req, resp);
     }
 }

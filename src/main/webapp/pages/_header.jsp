@@ -24,7 +24,7 @@
             <div class="navbar-nav">
                 <a class="nav-link active" aria-current="page" href="#">Home</a>
                 <a class="nav-link" href="${pageContext.request.contextPath}/pages/login.jsp">Login</a>
-                <a class="nav-link" href="${pageContext.request.contextPath}/pages/registration.jsp">Registration</a>
+                <a class="nav-link" href="${pageContext.request.contextPath}/pages/signup.jsp">Registration</a>
                 <a class="nav-link disabled" aria-disabled="true">Disabled</a>
             </div>
         </div>
