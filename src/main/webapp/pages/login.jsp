@@ -11,6 +11,7 @@
 <head>
     <title>Login</title>
 </head>
+<body>
 <jsp:include page="_header.jsp"/>
 <div class = "container">
 <div class="row align-items-center justify-content-center">
@@ -18,12 +19,12 @@
         <form>
             <div class="mb-3">
                 <label for="username" class="form-label">Username</label>
-                <input type="text" class="form-control" id="username" value="${username}" aria-describedby="usernameHelp">
+                <input type="text" class="form-control" id="username"  aria-describedby="usernameHelp">
                 <div id="usernameHelp" class="form-text">Username should be unique.</div>
             </div>
             <div class="mb-3">
                 <label for="exampleInputPassword1" class="form-label">Password</label>
-                <input type="password" class="form-control" id="exampleInputPassword1" value="${password}">
+                <input type="password" class="form-control" id="exampleInputPassword1" >
             </div>
             <div>
                 <button type="submit" class="btn btn-primary w-100">Login</button>
