@@ -14,8 +14,16 @@
 <body>
   <jsp:include page="_header.jsp"/>
      <div class="container">
+
          <div class="row align-items-center justify-content-center">
              <div class="col-3">
+                 <c:if test="${not empty errors}">
+                     <div class="alert alert-danger" role="alert">
+                         <c:forEach var="error" items="${errors}">
+                             ${error}
+                         </c:forEach>
+                     </div>
+                 </c:if>
                <form method="post" action="/signup">
                    <div class="mb-3">
                        <label for="exampleInputUsername" class="form-label">Username</label>

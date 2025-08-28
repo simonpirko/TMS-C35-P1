@@ -16,6 +16,13 @@
 <div class = "container">
 <div class="row align-items-center justify-content-center">
     <div class="col-3">
+        <c:if test="${not empty errors}">
+            <div class="alert alert-danger" role="alert">
+                <c:forEach var="error" items="${errors}">
+                    ${error}
+                </c:forEach>
+            </div>
+        </c:if>
         <form action="/login" method="post">
             <div class="mb-3">
                 <label for="username" class="form-label">Username</label>
