@@ -23,13 +23,13 @@ public class SignUpServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<String> errors = new ArrayList<>();
 
-        PostgreSQLService postgreSQLService = new PostgreSQLService();
+        AccountStorage accountStorage = new AccountStorage();
 
         String username = req.getParameter("username");
 
         String password = req.getParameter("password");
 
-        Account account = new Account(username, password);
+        Account account = new Account(null, username, password);
 
         if (username.isBlank()) {
             errors.add("Username is empty.");
@@ -43,18 +43,18 @@ public class SignUpServlet extends HttpServlet {
             errors.add("Passwords do not match.");
         }
 
-        if (!postgreSQLService.isUnique(account)){
+        if (!accountStorage.isUnique(account)){
             errors.add("Account is already exists.");
         }
 
-        if(!password.equals(confirmPassword) || username.isBlank() || password.isBlank() || !postgreSQLService.isUnique(account))
+        if(!password.equals(confirmPassword) || username.isBlank() || password.isBlank() || !accountStorage.isUnique(account))
         {
             errors.add("Failed to create account!");
             req.setAttribute("errors", errors);
             req.getServletContext().getRequestDispatcher("/pages/signup.jsp").forward(req, resp);
         }
         else {
-            if (postgreSQLService.addAccount(account)) {
+            if (accountStorage.addAccount(account)) {
                 HttpSession session = req.getSession();
                 session.setAttribute("account", account);
                 resp.sendRedirect("/");
