@@ -14,8 +14,7 @@ public class LogOutServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession(false);
         if (session != null) {
-            session.removeAttribute("account");
-            req.getSession().invalidate();
+            session.invalidate();
         }
         resp.sendRedirect("/");
     }

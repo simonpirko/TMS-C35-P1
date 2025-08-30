@@ -27,9 +27,9 @@ public class LogInServlet extends HttpServlet {
 
         String password = req.getParameter("password");
 
-        PostgreSQLService postgreSQLService = new PostgreSQLService();
+        AccountStorage accountStorage = new AccountStorage();
 
-        Optional<Account> account = postgreSQLService.getAccount(username, password);
+        Optional<Account> account = accountStorage.getAccountByUsername(username, password);
         if (account.isPresent()) {
             Account account1 = account.get();
             HttpSession session = req.getSession();
