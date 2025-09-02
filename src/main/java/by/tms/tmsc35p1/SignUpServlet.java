@@ -26,7 +26,6 @@ public class SignUpServlet extends HttpServlet {
         AccountStorage accountStorage = new AccountStorage();
 
         String username = req.getParameter("username");
-
         String password = req.getParameter("password");
 
         Account account = new Account(null, username, password);

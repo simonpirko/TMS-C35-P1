@@ -11,6 +11,10 @@ public class AccountStorage {
     public static final String ACCOUNT_ADD_SQL = "INSERT INTO accounts VALUES (default, ?, ?)";
     public static final String ACCOUNT_GET_SQL = "SELECT * FROM accounts WHERE username=? AND password=?";
 
+    public static final String UPDATE_USERNAME_SQL = "UPDATE accounts SET username = ? WHERE id = ?";
+    public static final String UPDATE_PASSWORD_SQL = "UPDATE accounts SET password = ? WHERE id = ?";
+    public static final String CHECK_USERNAME_UNIQUE_SQL = "SELECT COUNT(*) FROM accounts WHERE username = ? AND id != ?";
+
     public boolean isUnique(Account account) {
         boolean flag = true;
         try{
@@ -89,5 +93,94 @@ public class AccountStorage {
         return Optional.ofNullable(account);
     }
 
+
+    public boolean isUsernameUnique(String username, Integer excludeAccountId) {
+        try {
+            Connection conn = PostgresConnector.getConnection();
+            conn.setAutoCommit(false);
+
+            PreparedStatement stmt = conn.prepareStatement(CHECK_USERNAME_UNIQUE_SQL);
+            stmt.setString(1, username);
+            stmt.setInt(2, excludeAccountId);
+
+            ResultSet rs = stmt.executeQuery();
+            boolean isUnique = false;
+            if (rs.next()) {
+                isUnique = rs.getInt(1) == 0;
+            }
+
+            conn.commit();
+            conn.close();
+            return isUnique;
+        } catch (SQLException e) {
+            Logger.getLogger(AccountStorage.class.getName()).log(Level.SEVERE, "Failed to check username uniqueness", e);
+            return false;
+        }
+    }
+
+    // Обновить username
+    public boolean updateUsername(Integer accountId, String newUsername) {
+        try {
+            Connection conn = PostgresConnector.getConnection();
+            conn.setAutoCommit(false);
+
+            PreparedStatement stmt = conn.prepareStatement(UPDATE_USERNAME_SQL);
+            stmt.setString(1, newUsername);
+            stmt.setInt(2, accountId);
+
+            int rowsAffected = stmt.executeUpdate();
+            conn.commit();
+            conn.close();
+
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            Logger.getLogger(AccountStorage.class.getName()).log(Level.SEVERE, "Failed to update username", e);
+            return false;
+        }
+    }
+
+    // Обновить password
+    public boolean updatePassword(Integer accountId, String newPassword) {
+        try {
+            Connection conn = PostgresConnector.getConnection();
+            conn.setAutoCommit(false);
+
+            PreparedStatement stmt = conn.prepareStatement(UPDATE_PASSWORD_SQL);
+            stmt.setString(1, newPassword);
+            stmt.setInt(2, accountId);
+
+            int rowsAffected = stmt.executeUpdate();
+            conn.commit();
+            conn.close();
+
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            Logger.getLogger(AccountStorage.class.getName()).log(Level.SEVERE, "Failed to update password", e);
+            return false;
+        }
+    }
+
+    // Получить аккаунт по ID
+    public Optional<Account> getAccountById(Integer accountId) {
+        Account account = null;
+        try {
+            Connection conn = PostgresConnector.getConnection();
+            conn.setAutoCommit(false);
+
+            PreparedStatement preparedStatement = conn.prepareStatement("SELECT * FROM accounts WHERE id = ?");
+            preparedStatement.setInt(1, accountId);
+
+            ResultSet rs = preparedStatement.executeQuery();
+            if (rs.next()) {
+                account = new Account(rs.getInt("id"), rs.getString("username"), rs.getString("password"));
+            }
+
+            conn.commit();
+            conn.close();
+        } catch(Exception e) {
+            Logger.getLogger(AccountStorage.class.getName()).log(Level.SEVERE, "Failed to get account by id", e);
+        }
+        return Optional.ofNullable(account);
+    }
 }
 
