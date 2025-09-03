@@ -16,6 +16,16 @@
 <div class = "container">
 <div class="row align-items-center justify-content-center">
     <div class="col-3">
+        <%
+            String error = request.getParameter("error");
+            if ("auth".equals(error)) {
+        %>
+        <div class="alert alert-warning text-center" role="alert">
+            Необходимо авторизоваться для доступа к этой странице
+        </div>
+        <%
+            }
+        %>
         <c:if test="${not empty errors}">
             <div class="alert alert-danger" role="alert">
                 <c:forEach var="error" items="${errors}">
