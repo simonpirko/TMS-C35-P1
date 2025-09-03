@@ -47,6 +47,12 @@
             <version>42.7.7</version>
         </dependency>
         <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.38</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>jakarta.servlet.jsp.jstl</groupId>
             <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
             <version>3.0.2</version>
@@ -63,6 +69,7 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
 
     <build>
         <plugins>
