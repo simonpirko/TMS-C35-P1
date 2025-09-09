@@ -33,9 +33,17 @@ public class LogInServlet extends HttpServlet {
         if (account.isPresent()) {
             Account account1 = account.get();
             HttpSession session = req.getSession();
+            String redirect = (String) session.getAttribute("redirect");
             session.setAttribute("account", account1);
             req.setAttribute("account", account1);
-            resp.sendRedirect("/");
+            if(redirect != null && !redirect.isEmpty()) {
+                session.removeAttribute("redirect");
+                resp.sendRedirect(req.getContextPath() + redirect);
+            }
+            else {
+                resp.sendRedirect("/");
+            }
+
         }
         else {
             errors.add("Invalid username or password");
