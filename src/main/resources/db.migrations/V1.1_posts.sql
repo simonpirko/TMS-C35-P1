@@ -4,3 +4,6 @@ CREATE TABLE posts (
  content TEXT NOT NULL,
  created_at TIMESTAMP DEFAULT now()
 );
+
+alter table posts
+    owner to postgres;
