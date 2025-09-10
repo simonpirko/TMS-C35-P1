@@ -5,6 +5,7 @@ import java.time.LocalDate;
 public record AccountDetails(
         Integer accountId,
         String email,
+        String gender,
         String bio,
         String location,
         String website,
@@ -17,6 +18,6 @@ public record AccountDetails(
     }
 
     public AccountDetails(Integer accountId) {
-        this(accountId, null, null, null, null, null, null, null);
+        this(accountId, null, null,null, null, null, null, null, null);
     }
 }

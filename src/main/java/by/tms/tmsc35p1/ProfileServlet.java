@@ -76,6 +76,7 @@ public class ProfileServlet extends HttpServlet {
 
         // Получаем данные из формы
         String email = req.getParameter("email");
+        String gender = req.getParameter("gender");
         String bio = req.getParameter("bio");
         String location = req.getParameter("location");
         String website = req.getParameter("website");
@@ -90,6 +91,7 @@ public class ProfileServlet extends HttpServlet {
         AccountDetails details = new AccountDetails(
                 account.id(),
                 email,
+                gender,
                 bio,
                 location,
                 website,
@@ -97,6 +99,7 @@ public class ProfileServlet extends HttpServlet {
                 currentDetails.avatarUrl(),
                 currentDetails.headerUrl()
         );
+
 
         // Сохраняем в базу
         if (detailsStorage.updateAccountDetails(details)) {
