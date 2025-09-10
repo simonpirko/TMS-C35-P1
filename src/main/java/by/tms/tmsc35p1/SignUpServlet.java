@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @WebServlet("/signup")
@@ -53,9 +54,15 @@ public class SignUpServlet extends HttpServlet {
             req.getServletContext().getRequestDispatcher("/pages/signup.jsp").forward(req, resp);
         }
         else {
-            if (accountStorage.addAccount(account)) {
+            Optional<Account> createdAccountOpt = accountStorage.addAccount(account);
+
+            if (createdAccountOpt.isPresent()) {
+                Account createdAccount = createdAccountOpt.get();
+
                 HttpSession session = req.getSession();
-                session.setAttribute("account", account);
+                session.setAttribute("account", createdAccount);
+                AccountDetailsStorage detailsStorage = new AccountDetailsStorage();
+                detailsStorage.createAccountDetails(new AccountDetails(createdAccount.id()));
                 resp.sendRedirect("/");
             }
             else {

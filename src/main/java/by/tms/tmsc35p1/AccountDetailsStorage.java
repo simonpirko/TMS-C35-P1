@@ -10,7 +10,7 @@ public class AccountDetailsStorage {
 
     public static final String DETAILS_INSERT_SQL =
             "INSERT INTO account_details (account_id, email,gender, bio, location, website, birth_date, avatar_url, header_url) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     public static final String DETAILS_UPDATE_SQL =
             "UPDATE account_details SET email=?,gender=?, bio=?, location=?, website=?, birth_date=?, avatar_url=?, header_url=? " +
