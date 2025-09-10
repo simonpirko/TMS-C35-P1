@@ -300,12 +300,27 @@
                                        placeholder="your.email@example.com">
                             </div>
 
+                            <!-- Gender -->
+                            <div class="mb-4">
+                                <label class="form-label fw-bold text-muted mb-2">Gender</label>
+                                <div>
+                                <input type="radio"
+                                       id="male" name="gender" value="Man" required>
+                                <label class="form-check form-check-inline bg-light rounded-3 p-2" >Man</label>
+                                <input  type="radio"
+                                       id="female" name="gender" value="Woman" required>
+                                <label class="form-check form-check-inline bg-light rounded-3 p-2">Woman </label>
+
+                            </div>
+                            </div>
+
                             <!-- Bio -->
                             <div class="mb-4">
                                 <label for="bio" class="form-label fw-bold text-muted mb-2">Bio</label>
                                 <textarea class="form-control border-0 bg-light rounded-3" id="bio" name="bio" rows="3"
                                           placeholder="Tell us about yourself..." style="resize: none;">${not empty accountDetails.bio() ? accountDetails.bio() : ''}</textarea>
                             </div>
+
 
                             <!-- Location -->
                             <div class="mb-4">

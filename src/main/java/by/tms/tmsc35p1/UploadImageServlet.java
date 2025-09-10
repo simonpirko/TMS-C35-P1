@@ -96,6 +96,7 @@ public class UploadImageServlet extends HttpServlet {
                         updatedDetails = new AccountDetails(
                                 account.id(),
                                 currentDetails.email(),
+                                currentDetails.gender(),
                                 currentDetails.bio(),
                                 currentDetails.location(),
                                 currentDetails.website(),
@@ -107,6 +108,7 @@ public class UploadImageServlet extends HttpServlet {
                         updatedDetails = new AccountDetails(
                                 account.id(),
                                 currentDetails.email(),
+                                currentDetails.gender(),
                                 currentDetails.bio(),
                                 currentDetails.location(),
                                 currentDetails.website(),
