@@ -1,0 +1,56 @@
+package by.tms.tmsc35p1;
+
+import jakarta.servlet.http.HttpServlet;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class PostDAO extends HttpServlet {
+    private final Connection connection;
+
+    public PostDAO(Connection connection) {
+        this.connection = connection;
+    }
+
+    public List<Post> getAllPostsSortedByDate() throws SQLException {
+        String sql = "SELECT * FROM posts ORDER BY created_at DESC";
+        List<Post> posts = new ArrayList<>();
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                Post post = new Post(rs.getInt("id"), rs.getString("title"), rs.getString("content"), rs.getInt("user_id"), rs.getTimestamp("timestamp"));
+                post.setId(rs.getInt("id"));
+                post.setContent(rs.getString("content"));
+                post.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+                posts.add(post);
+            }
+        }
+
+        return posts;
+    }
+
+    public Post getPostById(int id) throws SQLException {
+        String sql = "SELECT * FROM posts WHERE id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql);) {
+            stmt.setInt(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return new Post(
+                            rs.getInt("id"),
+                            rs.getString("title"),
+                            rs.getString("content"),
+                            rs.getInt("user_id"),
+                            rs.getTimestamp("timestamp")
+                    );
+                }
+            }
+        }
+        return null;
+    }
+}
