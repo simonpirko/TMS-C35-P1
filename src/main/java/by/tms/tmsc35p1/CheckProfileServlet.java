@@ -5,6 +5,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.time.LocalDate;
 
 import java.io.IOException;
 import java.sql.*;
@@ -24,7 +25,7 @@ public class CheckProfileServlet extends HttpServlet {
 
         try (Connection conn = PostgresConnector.getConnection()) {
             String sql = "SELECT a.id, a.username,a.password," +
-                         "d.account_id, d.email, d.bio, d.location, d.website, d.birth_date,d.avatar_url, d.header_url " +
+                         "d.account_id, d.email, d.gender, d.bio, d.location, d.website, d.birth_date,d.avatar_url, d.header_url " +
                          "FROM accounts a " +
                          "JOIN account_details d ON a.id = d.account_id " +
                          "WHERE a.id = ?";
@@ -40,14 +41,16 @@ public class CheckProfileServlet extends HttpServlet {
                                 rs.getString("password") // не хотел добавлять, но ругается на то что его нет
                         );
 
-
+                        java.sql.Date sqlDate = rs.getDate("birth_date");
+                        LocalDate birthDate = (sqlDate != null) ? sqlDate.toLocalDate() : null;
                         AccountDetails details = new AccountDetails(
                                 rs.getInt("account_id"),
                                 rs.getString("email"),
+                                rs.getString("gender"),
                                 rs.getString("bio"),
                                 rs.getString("location"),
                                 rs.getString("website"),
-                                rs.getDate("birth_date").toLocalDate(),
+                                birthDate,
                                 rs.getString("avatar_url"),
                                 rs.getString("header_url")
                         );

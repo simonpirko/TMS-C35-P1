@@ -122,6 +122,13 @@
                         <a href="${accountDetails.website()}" class="text-white-50" target="_blank">${accountDetails.website()}</a>
                     </p>
                 </c:if>
+                <c:if test="${not empty accountDetails.gender()}">
+                    <p class="text-white-50 mb-0">
+                        <span class="text-white-50" >
+                               ♂♀ ${accountDetails.gender()}
+                        </span>
+                    </p>
+                </c:if>
             </div>
             <div class="col-md-4 text-end">
                 <c:if test="${sessionScope.account.id() == account.id()}">
@@ -304,13 +311,15 @@
                             <div class="mb-4">
                                 <label class="form-label fw-bold text-muted mb-2">Gender</label>
                                 <div>
-                                <input type="radio"
-                                       id="male" name="gender" value="Man" required>
-                                <label class="form-check form-check-inline bg-light rounded-3 p-2" >Man</label>
                                 <input  type="radio"
-                                       id="female" name="gender" value="Woman" required>
-                                <label class="form-check form-check-inline bg-light rounded-3 p-2">Woman </label>
+                                       id="male" name="gender" value="Man"  required>
+                                <label  class="form-check form-check-inline bg-light rounded-3 p-2" > ♂ Man </label>
+                                <input  type="radio"
+                                       id=" female" name="gender" value="Woman" required>
+                                <label  class="form-check form-check-inline bg-light rounded-3 p-2"> ♀ Woman </label>
 
+
+                            </div>
                             </div>
 
                             <!-- Bio -->

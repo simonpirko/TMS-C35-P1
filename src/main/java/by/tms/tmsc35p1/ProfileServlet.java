@@ -74,6 +74,7 @@ public class ProfileServlet extends HttpServlet {
         Optional<AccountDetails> currentDetailsOpt = detailsStorage.getAccountDetails(account.id());
         AccountDetails currentDetails = currentDetailsOpt.orElse(new AccountDetails(account.id()));
 
+
         // Получаем данные из формы
         String email = req.getParameter("email");
         String gender = req.getParameter("gender");
@@ -81,6 +82,8 @@ public class ProfileServlet extends HttpServlet {
         String location = req.getParameter("location");
         String website = req.getParameter("website");
         String birthDateStr = req.getParameter("birthDate");
+
+
 
         LocalDate birthDate = null;
         if (birthDateStr != null && !birthDateStr.isEmpty()) {

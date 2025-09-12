@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS account_details (
      birth_date DATE,
      avatar_url VARCHAR(500),
      header_url VARCHAR(500),
-     gender bytea
+     gender varchar
 
 );
 
