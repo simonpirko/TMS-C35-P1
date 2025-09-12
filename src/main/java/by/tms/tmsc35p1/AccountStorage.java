@@ -40,29 +40,34 @@ public class AccountStorage {
         return flag;
     }
 
-    public boolean addAccount(Account account){
+    public Optional<Account> addAccount(Account account){
         boolean result = false;
-        if(!isUnique(account)){
-            return result;
-        }
-        try {
+                try {
             Connection conn = PostgresConnector.getConnection();
             conn.setAutoCommit(false);
 
-            PreparedStatement addStatement = conn.prepareStatement(ACCOUNT_ADD_SQL);
+            PreparedStatement addStatement = conn.prepareStatement(ACCOUNT_ADD_SQL, Statement.RETURN_GENERATED_KEYS);
 
             addStatement.setString(1, account.username());
             addStatement.setString(2, account.password());
 
-            addStatement.execute();
+            int rows = addStatement.executeUpdate();
+
+            if (rows > 0) {
+                ResultSet rs = addStatement.getGeneratedKeys();
+                if (rs.next()) {
+                    int generatedId = rs.getInt(1);
+                    account = new Account(generatedId, account.username(), account.password());
+                }
+            }
             conn.commit();
             conn.close();
+return Optional.of(account);
 
-            result = true;
         } catch(Exception e) {
             Logger.getLogger(AccountStorage.class.getName()).log(Level.SEVERE, "Failed to create an account", e);
         }
-        return result;
+        return Optional.empty();
     }
 
     public Optional<Account> getAccountByUsername(String username, String password){
