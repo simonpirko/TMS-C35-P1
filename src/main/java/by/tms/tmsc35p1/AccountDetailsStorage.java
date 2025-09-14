@@ -9,11 +9,11 @@ import java.util.logging.Logger;
 public class AccountDetailsStorage {
 
     public static final String DETAILS_INSERT_SQL =
-            "INSERT INTO account_details (account_id, email, bio, location, website, birth_date, avatar_url, header_url) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            "INSERT INTO account_details (account_id, email,gender, bio, location, website, birth_date, avatar_url, header_url) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     public static final String DETAILS_UPDATE_SQL =
-            "UPDATE account_details SET email=?, bio=?, location=?, website=?, birth_date=?, avatar_url=?, header_url=? " +
+            "UPDATE account_details SET email=?,gender=?, bio=?, location=?, website=?, birth_date=?, avatar_url=?, header_url=? " +
                     "WHERE account_id=?";
 
     public static final String DETAILS_GET_SQL =
@@ -32,12 +32,13 @@ public class AccountDetailsStorage {
 
             stmt.setInt(1, details.accountId());
             setNullableString(stmt, 2, details.email());
-            setNullableString(stmt, 3, details.bio());
-            setNullableString(stmt, 4, details.location());
-            setNullableString(stmt, 5, details.website());
-            setNullableDate(stmt, 6, details.birthDate());
-            setNullableString(stmt, 7, details.avatarUrl());
-            setNullableString(stmt, 8, details.headerUrl());
+            setNullableString(stmt, 3, details.gender());
+            setNullableString(stmt, 4, details.bio());
+            setNullableString(stmt, 5, details.location());
+            setNullableString(stmt, 6, details.website());
+            setNullableDate(stmt, 7, details.birthDate());
+            setNullableString(stmt, 8, details.avatarUrl());
+            setNullableString(stmt, 9, details.headerUrl());
 
             stmt.executeUpdate();
             conn.commit();
@@ -66,24 +67,26 @@ public class AccountDetailsStorage {
                 // Обновляем существующие
                 stmt = conn.prepareStatement(DETAILS_UPDATE_SQL);
                 setNullableString(stmt, 1, details.email());
-                setNullableString(stmt, 2, details.bio());
-                setNullableString(stmt, 3, details.location());
-                setNullableString(stmt, 4, details.website());
-                setNullableDate(stmt, 5, details.birthDate());
-                setNullableString(stmt, 6, details.avatarUrl());
-                setNullableString(stmt, 7, details.headerUrl());
-                stmt.setInt(8, details.accountId());
-            } else {
-                // Создаем новые
-                stmt = conn.prepareStatement(DETAILS_INSERT_SQL);
-                stmt.setInt(1, details.accountId());
-                setNullableString(stmt, 2, details.email());
+                setNullableString(stmt, 2, details.gender());
                 setNullableString(stmt, 3, details.bio());
                 setNullableString(stmt, 4, details.location());
                 setNullableString(stmt, 5, details.website());
                 setNullableDate(stmt, 6, details.birthDate());
                 setNullableString(stmt, 7, details.avatarUrl());
                 setNullableString(stmt, 8, details.headerUrl());
+                stmt.setInt(9, details.accountId());
+            } else {
+                // Создаем новые
+                stmt = conn.prepareStatement(DETAILS_INSERT_SQL);
+                stmt.setInt(1, details.accountId());
+                setNullableString(stmt, 2, details.email());
+                setNullableString(stmt, 3, details.gender());
+                setNullableString(stmt, 4, details.bio());
+                setNullableString(stmt, 5, details.location());
+                setNullableString(stmt, 6, details.website());
+                setNullableDate(stmt, 7, details.birthDate());
+                setNullableString(stmt, 8, details.avatarUrl());
+                setNullableString(stmt, 9, details.headerUrl());
             }
 
             int rowsAffected = stmt.executeUpdate();
@@ -113,6 +116,7 @@ public class AccountDetailsStorage {
                 details = new AccountDetails(
                         rs.getInt("account_id"),
                         rs.getString("email"),
+                        rs.getString("gender"),
                         rs.getString("bio"),
                         rs.getString("location"),
                         rs.getString("website"),

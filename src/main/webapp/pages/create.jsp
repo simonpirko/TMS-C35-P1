@@ -11,7 +11,9 @@
   <title>Создать пост</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body class="d-flex vh-100">
+<body >
+<jsp:include page="_header.jsp"/>
+<div class="d-flex vh-100">
 <div class="container d-flex justify-content-center align-items-center">
   <div class="col-md-6">
     <p class="text-center h4 mb-4">Создать пост</p>
@@ -30,6 +32,7 @@
       </div>
     </form>
   </div>
+</div>
 </div>
 </body>
 </html>
