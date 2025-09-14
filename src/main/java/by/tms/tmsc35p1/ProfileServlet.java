@@ -7,8 +7,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
+import javax.sql.DataSource;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @WebServlet("/profile")
@@ -16,13 +19,26 @@ public class ProfileServlet extends HttpServlet {
 
     private final AccountDetailsStorage detailsStorage = new AccountDetailsStorage();
     private final AccountStorage accountStorage = new AccountStorage();
+    private PostStorage postStorage;
+
+    public void init(){
+        DataSource ds = (DataSource)getServletContext().getAttribute("ds");
+        this.postStorage = new PostStorage(ds);
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
         Account account = (Account) session.getAttribute("account");
 
+
         if (account != null) {
+            try {
+                List<Post> posts = postStorage.findByUserId(account.id());
+                req.setAttribute("posts", posts);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
             // Загружаем детали профиля
             Optional<AccountDetails> detailsOpt = detailsStorage.getAccountDetails(account.id());
 

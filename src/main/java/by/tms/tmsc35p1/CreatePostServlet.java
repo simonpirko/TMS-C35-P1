@@ -7,11 +7,16 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
+import javax.sql.DataSource;
 import java.io.IOException;
 
 @WebServlet("/create")
 public class CreatePostServlet extends HttpServlet {
-    private final PostStorage postStorage = new PostStorage();
+    public void init(){
+        DataSource ds = (DataSource)getServletContext().getAttribute("ds");
+        this.postStorage = new PostStorage(ds);
+    }
+    private  PostStorage postStorage;
 
 
     @Override
