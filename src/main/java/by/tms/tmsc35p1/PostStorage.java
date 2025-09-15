@@ -11,6 +11,7 @@ public class PostStorage {
     public PostStorage(DataSource dataSource) {
         this.dataSource = dataSource;
     }
+
     public List<Post> findByUserId(int userId) throws SQLException {
         List<Post> posts = new ArrayList<>();
         String sql = "SELECT id, title, content, user_id, created_at FROM posts WHERE user_id = ? ORDER BY created_at DESC";
@@ -33,12 +34,14 @@ public class PostStorage {
         return posts;
     }
 
-    public static void save(String title, String content) {
-        String sql = "INSERT INTO posts (title, content) VALUES (?, ?)";
+    public static void save(String title, String content, Integer user_id) {
+        String sql = "INSERT INTO posts (title, content, user_id) VALUES (?, ?, ?)";
         try (Connection conn = PostgresConnector.getConnection()) {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, title);
             ps.setString(2, content);
+            ps.setInt(3, user_id);
+
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);

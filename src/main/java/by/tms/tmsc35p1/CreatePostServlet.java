@@ -12,10 +12,10 @@ import java.io.IOException;
 
 @WebServlet("/create")
 public class CreatePostServlet extends HttpServlet {
-    public void init(){
-        DataSource ds = (DataSource)getServletContext().getAttribute("ds");
-        this.postStorage = new PostStorage(ds);
-    }
+//    public void init(){
+//        DataSource ds = (DataSource)getServletContext().getAttribute("ds");
+//        this.postStorage = new PostStorage(ds);
+//    }
     private  PostStorage postStorage;
 
 
@@ -25,11 +25,15 @@ public class CreatePostServlet extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session = req.getSession();
+        Account account = (Account) session.getAttribute("account");
 
         String title = req.getParameter("title");
         String content = req.getParameter("content");
+        Integer user_id = account.id();
 
-        postStorage.save(title, content);
+
+        postStorage.save(title, content, user_id);
 
         resp.sendRedirect(req.getContextPath() + "/");
 
