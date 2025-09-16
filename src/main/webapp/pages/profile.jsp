@@ -183,20 +183,20 @@
                                         <div class="card">
                                             <div class="card-body">
                                                 <p class="card-text">${post.content()}</p>
-                                                <div class="d-flex justify-content-between align-items-center">
-                                                    <small class="text-muted">
-                                                        <i class="bi bi-clock me-1"></i>
-                                                            ${post.createdAt()}
-                                                    </small>
-                                                    <div>
-                                                        <span class="text-muted me-3">
-                                                            <i class="bi bi-heart me-1"></i>${post.likesCount()}
-                                                        </span>
-                                                        <span class="text-muted">
-                                                            <i class="bi bi-chat me-1"></i>${post.commentsCount()}
-                                                        </span>
-                                                    </div>
-                                                </div>
+<%--                                                <div class="d-flex justify-content-between align-items-center">--%>
+<%--                                                    <small class="text-muted">--%>
+<%--                                                        <i class="bi bi-clock me-1"></i>--%>
+<%--                                                            ${post.createdAt()}--%>
+<%--                                                    </small>--%>
+<%--                                                    <div>--%>
+<%--                                                        <span class="text-muted me-3">--%>
+<%--                                                            <i class="bi bi-heart me-1"></i>${post.likesCount()}--%>
+<%--                                                        </span>--%>
+<%--                                                        <span class="text-muted">--%>
+<%--                                                            <i class="bi bi-chat me-1"></i>${post.commentsCount()}--%>
+<%--                                                        </span>--%>
+<%--                                                    </div>--%>
+<%--                                                </div>--%>
                                             </div>
                                         </div>
                                     </div>
