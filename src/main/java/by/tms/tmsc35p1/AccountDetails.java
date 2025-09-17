@@ -17,7 +17,15 @@ public record AccountDetails(
         // может позже добавлю валидацию.. :3
     }
 
+
+
+
     public AccountDetails(Integer accountId) {
         this(accountId, null, null,null, null, null, null, null, null);
+    }
+
+    @Override
+    public Integer accountId() {
+        return accountId;
     }
 }

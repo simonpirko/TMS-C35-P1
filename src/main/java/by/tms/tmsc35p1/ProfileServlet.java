@@ -7,8 +7,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
+import javax.sql.DataSource;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @WebServlet("/profile")
@@ -16,34 +19,55 @@ public class ProfileServlet extends HttpServlet {
 
     private final AccountDetailsStorage detailsStorage = new AccountDetailsStorage();
     private final AccountStorage accountStorage = new AccountStorage();
+    private PostStorage postStorage;
+
+    public void init(){
+        DataSource ds = (DataSource)getServletContext().getAttribute("ds");
+        this.postStorage = new PostStorage(ds);
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
         Account account = (Account) session.getAttribute("account");
 
-        if (account != null) {
-            // Загружаем детали профиля
-            Optional<AccountDetails> detailsOpt = detailsStorage.getAccountDetails(account.id());
+        String idParam = req.getParameter("id");
+        int userId;
 
+        if (idParam != null) {
+            userId = Integer.parseInt(idParam); // чужой профиль
+        } else if (account != null) {
+            userId = account.id(); // свой профиль
+        } else {
+            resp.sendRedirect(req.getContextPath() + "/login");
+            return;
+        }
+
+        try {
+            List<Post> posts = postStorage.findByUserId(userId);
+            req.setAttribute("posts", posts);
+
+            Optional<AccountDetails> detailsOpt = detailsStorage.getAccountDetails(userId);
             if (detailsOpt.isPresent()) {
-                AccountDetails details = detailsOpt.get();
-                req.setAttribute("accountDetails", details);
+                req.setAttribute("accountDetails", detailsOpt.get());
             } else {
-                // Создаем пустые детали если их нет
-                req.setAttribute("accountDetails", new AccountDetails(account.id()));
+                req.setAttribute("accountDetails", new AccountDetails(userId));
             }
 
-            req.setAttribute("account", account);
-            req.setAttribute("postCount", 0);
-            req.setAttribute("followingCount", 0);
+            Optional<Account> accountOpt = accountStorage.getAccountById(userId);
+            accountOpt.ifPresent(acc -> req.setAttribute("account", acc));
+
+            req.setAttribute("postCount", posts.size());
+            req.setAttribute("followingCount", 0); //у
             req.setAttribute("followersCount", 0);
 
             req.getServletContext().getRequestDispatcher("/pages/profile.jsp").forward(req, resp);
-        } else {
-            resp.sendRedirect(req.getContextPath() + "/login");
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
+
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
