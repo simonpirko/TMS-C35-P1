@@ -42,6 +42,7 @@
                         <a class="nav-link" href="#" onclick="document.getElementById('logoutForm').submit(); return false;">Log Out</a>
                         <form id="logoutForm" action="${pageContext.request.contextPath}/logout" method="post" style="display:none;">
                         </form>
+                        <a class="nav-link" href="${pageContext.request.contextPath}/create">Create Post</a>
                     </c:when>
                     <c:otherwise>
                         <a class="nav-link" href="${pageContext.request.contextPath}/login">Log In</a>
