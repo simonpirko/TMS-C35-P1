@@ -9,6 +9,8 @@ import java.time.LocalDate;
 
 import java.io.IOException;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @WebServlet("/check-profile")
 public class CheckProfileServlet extends HttpServlet {
@@ -25,9 +27,9 @@ public class CheckProfileServlet extends HttpServlet {
 
         try (Connection conn = PostgresConnector.getConnection()) {
             String sql = "SELECT a.id, a.username,a.password," +
-                         "d.account_id, d.email, d.gender, d.bio, d.location, d.website, d.birth_date,d.avatar_url, d.header_url " +
-                         "FROM accounts a " +
-                         "JOIN account_details d ON a.id = d.account_id " +
+                         "d.account_id, d.email, d.gender, d.bio, d.location, d.website, d.birth_date,d.avatar_url, d.header_url" +
+                         " FROM accounts a" +
+                         " JOIN account_details d ON a.id = d.account_id " +
                          "WHERE a.id = ?";
 
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -53,7 +55,45 @@ public class CheckProfileServlet extends HttpServlet {
                                 birthDate,
                                 rs.getString("avatar_url"),
                                 rs.getString("header_url")
+
                         );
+
+                        String countSql = "SELECT COUNT(*) AS cnt FROM posts WHERE user_id = ?";
+                        try (PreparedStatement countStmt = conn.prepareStatement(countSql)) {
+                            countStmt.setInt(1, account.id());
+                            try (ResultSet countRs = countStmt.executeQuery()) {
+                                if (countRs.next()) {
+                                    req.setAttribute("postCount", countRs.getInt("cnt"));
+                                }
+                            }
+                        }
+
+                        String postSql = "SELECT id, title, content, created_at " +
+                                "FROM posts " +
+                                "WHERE user_id = ? " +
+                                "ORDER BY created_at DESC";
+
+                        try (PreparedStatement postStmt = conn.prepareStatement(postSql)) {
+                            postStmt.setInt(1, account.id());
+
+                            try (ResultSet postRs = postStmt.executeQuery()) {
+                                List<Post> posts = new ArrayList<>();
+                                while (postRs.next()) {
+                                    Post post = new Post(
+                                            postRs.getInt("id"),
+                                            postRs.getString("title"),
+                                            postRs.getString("content"),
+                                            account.id(),
+                                            postRs.getTimestamp("created_at")
+                                             // user_id
+                                    );
+                                    posts.add(post);
+
+                                }
+                                req.setAttribute("posts", posts);
+                                req.setAttribute("post_count", posts.size());
+                            }
+                        }
 
                         req.setAttribute("account", account);
                         req.setAttribute("accountDetails", details);

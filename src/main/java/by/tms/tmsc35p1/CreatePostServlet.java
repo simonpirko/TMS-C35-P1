@@ -7,11 +7,16 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
+import javax.sql.DataSource;
 import java.io.IOException;
 
 @WebServlet("/create")
 public class CreatePostServlet extends HttpServlet {
-    private final PostStorage postStorage = new PostStorage();
+//    public void init(){
+//        DataSource ds = (DataSource)getServletContext().getAttribute("ds");
+//        this.postStorage = new PostStorage(ds);
+//    }
+    private  PostStorage postStorage;
 
 
     @Override
@@ -20,11 +25,15 @@ public class CreatePostServlet extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session = req.getSession();
+        Account account = (Account) session.getAttribute("account");
 
         String title = req.getParameter("title");
         String content = req.getParameter("content");
+        Integer user_id = account.id();
 
-        postStorage.save(title, content);
+
+        postStorage.save(title, content, user_id);
 
         resp.sendRedirect(req.getContextPath() + "/");
 
