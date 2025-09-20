@@ -14,10 +14,18 @@ import java.util.List;
 
 @WebServlet("/check-profile")
 public class CheckProfileServlet extends HttpServlet {
+    private CommentStorage commentStorage;
+
+    public void init(){
+        this.commentStorage = new CommentStorage();
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+
+        List<Comment> comments = commentStorage.getAllComments();
+        req.setAttribute("comments", comments);
 
         String idParam = req.getParameter("id");
         if (idParam == null) {

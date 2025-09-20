@@ -20,10 +20,12 @@ public class ProfileServlet extends HttpServlet {
     private final AccountDetailsStorage detailsStorage = new AccountDetailsStorage();
     private final AccountStorage accountStorage = new AccountStorage();
     private PostStorage postStorage;
+    private CommentStorage commentStorage;
 
     public void init(){
         DataSource ds = (DataSource)getServletContext().getAttribute("ds");
         this.postStorage = new PostStorage(ds);
+        this.commentStorage = new CommentStorage();
     }
 
     @Override
@@ -46,6 +48,9 @@ public class ProfileServlet extends HttpServlet {
         try {
             List<Post> posts = postStorage.findByUserId(userId);
             req.setAttribute("posts", posts);
+
+            List<Comment> comments = commentStorage.getAllComments();
+            req.setAttribute("comments", comments);
 
             Optional<AccountDetails> detailsOpt = detailsStorage.getAccountDetails(userId);
             if (detailsOpt.isPresent()) {
