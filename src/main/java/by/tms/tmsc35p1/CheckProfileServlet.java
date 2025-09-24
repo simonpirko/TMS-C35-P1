@@ -6,7 +6,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-
 import java.time.LocalDate;
 
 import java.io.IOException;
@@ -14,12 +13,20 @@ import java.sql.*;
 
 @WebServlet("/check-profile")
 public class CheckProfileServlet extends HttpServlet {
+    private CommentStorage commentStorage;
+
+    public void init(){
+        this.commentStorage = new CommentStorage();
+    }
 
     FollowService followService = new FollowService(new FollowRepository());
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+
+        List<Comment> comments = commentStorage.getAllComments();
+        req.setAttribute("comments", comments);
 
         String idParam = req.getParameter("id");
         if (idParam == null) {
@@ -29,9 +36,9 @@ public class CheckProfileServlet extends HttpServlet {
 
         try (Connection conn = PostgresConnector.getConnection()) {
             String sql = "SELECT a.id, a.username,a.password," +
-                         "d.account_id, d.email, d.gender, d.bio, d.location, d.website, d.birth_date,d.avatar_url, d.header_url" +
-                         " FROM accounts a" +
-                         " JOIN account_details d ON a.id = d.account_id " +
+                         "d.account_id, d.email, d.bio, d.location, d.website, d.birth_date,d.avatar_url, d.header_url " +
+                         "FROM accounts a " +
+                         "JOIN account_details d ON a.id = d.account_id " +
                          "WHERE a.id = ?";
 
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -45,16 +52,14 @@ public class CheckProfileServlet extends HttpServlet {
                                 rs.getString("password") // не хотел добавлять, но ругается на то что его нет
                         );
 
-                        java.sql.Date sqlDate = rs.getDate("birth_date");
-                        LocalDate birthDate = (sqlDate != null) ? sqlDate.toLocalDate() : null;
+
                         AccountDetails details = new AccountDetails(
                                 rs.getInt("account_id"),
                                 rs.getString("email"),
-                                rs.getString("gender"),
                                 rs.getString("bio"),
                                 rs.getString("location"),
                                 rs.getString("website"),
-                                birthDate,
+                                rs.getDate("birth_date").toLocalDate(),
                                 rs.getString("avatar_url"),
                                 rs.getString("header_url")
                         );
@@ -68,7 +73,7 @@ public class CheckProfileServlet extends HttpServlet {
                         if (currentUser != null) {
                             isFollowing = followService.checkIfFollowing(currentUser.id(), Integer.parseInt(idParam));
                         }
-
+                      
                         req.setAttribute("account", account);
                         req.setAttribute("accountDetails", details);
                         req.setAttribute("followersCount", followersCount);

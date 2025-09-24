@@ -53,6 +53,11 @@
 
             <!-- аватарка и имя пользователя -->
             <div class="navbar-nav ms-auto">
+                <a class="nav-link active" aria-current="page" href="/">Home</a>
+                <form th:action="@{/search}" method="get" class="d-flex align-items-center me-3">
+                    <input type="text" name="username" class="form-control me-2" placeholder="Поиск пользователя..." required />
+                    <button type="submit" class="btn btn-outline-secondary"> </button>
+                </form>
                 <c:choose>
                     <c:when test="${not empty sessionScope.account}">
                         <a class="nav-link" href="${pageContext.request.contextPath}/profile">

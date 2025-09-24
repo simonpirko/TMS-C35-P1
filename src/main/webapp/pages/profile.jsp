@@ -206,6 +206,74 @@
                                         <div class="card">
                                             <div class="card-body">
                                                 <p class="card-text">${post.content()}</p>
+                                                <style>
+                                                    .comments ul ul {
+                                                        margin-left: 60px;
+                                                    }
+                                                    .comments .comment img {
+                                                        margin-right: 20px;
+                                                    }
+                                                    .comments .comment {
+                                                        padding: 6px;
+                                                    }
+                                                    .comments .comment:hover {
+                                                        background: #eee;
+                                                    }
+                                                </style>
+
+                                                <div class="container">
+
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="panel panel-info">
+                                                                <div class="panel-heading">
+                                                                    Комментарии
+                                                                </div>
+                                                                <div class="panel-body comments">
+                                                                    <c:if test="${not empty sessionScope.account}">
+                                                                    <form action="/comment" method="post">
+                                                                        <input type="hidden" name="postId" value="${post.id()}">
+                                                                        <textarea class="form-control" name="commentText" placeholder="Оставьте Ваш комментарий" rows="1"></textarea>
+                                                                        <br>
+                                                                        <button type="submit" class="btn btn-secondary pull-right">Отправить</button>
+                                                                        <div class="clearfix"></div>
+                                                                    </form>
+                                                                    </c:if>
+
+                                                                    <hr>
+
+                                                                    <!-- ВЫВОД КОММЕНТАРИЕВ ДЛЯ ЭТОГО ПОСТА -->
+                                                                    <c:forEach var="comment" items="${comments}">
+                                                                        <c:if test="${comment.postId() == post.id()}">
+                                                                        <div class="comment media mb-3">
+                                                                            <!-- Аватарка с проверкой на null -->
+                                                                            <c:choose>
+                                                                                <c:when test="${not empty comment.avatarUrl()}">
+                                                                                    <img src="${comment.avatarUrl()}"
+                                                                                         alt="${comment.commentAuthor()}"
+                                                                                         class="mr-3 rounded-circle"
+                                                                                         width="40" height="40">
+                                                                                </c:when>
+                                                                                <c:otherwise>
+                                                                                    <img src="https://ui-avatars.com/api/?name=${comment.commentAuthor()}&background=random&size=150&rounded=true&format=svg"
+                                                                                         alt="${comment.commentAuthor()}"
+                                                                                         class="mr-3 rounded-circle"
+                                                                                         width="40" height="40">
+                                                                                </c:otherwise>
+                                                                            </c:choose>
+                                                                            <div class="media-body">
+                                                                                <strong class="text-success">${comment.commentAuthor()}</strong>
+                                                                                <p class="mb-1">${comment.commentText()}</p>
+                                                                            </div>
+                                                                        </div>
+                                                                            </c:if>
+                                                                    </c:forEach>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
 <%--                                                <div class="d-flex justify-content-between align-items-center">--%>
 <%--                                                    <small class="text-muted">--%>
 <%--                                                        <i class="bi bi-clock me-1"></i>--%>
