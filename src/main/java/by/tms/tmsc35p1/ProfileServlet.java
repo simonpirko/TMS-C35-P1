@@ -17,6 +17,7 @@ import java.util.Optional;
 @WebServlet("/profile")
 public class ProfileServlet extends HttpServlet {
 
+    FollowService followService = new FollowService(new FollowRepository());
     private final AccountDetailsStorage detailsStorage = new AccountDetailsStorage();
     private final AccountStorage accountStorage = new AccountStorage();
     private PostStorage postStorage;
@@ -65,12 +66,15 @@ public class ProfileServlet extends HttpServlet {
             req.setAttribute("postCount", posts.size());
             req.setAttribute("followingCount", 0); //у
             req.setAttribute("followersCount", 0);
+            req.setAttribute("followersCount", followService.getFollowersCount(userId));
+            req.setAttribute("followingCount", followService.getFollowingCount(userId));
 
             req.getServletContext().getRequestDispatcher("/pages/profile.jsp").forward(req, resp);
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
     }
 
 

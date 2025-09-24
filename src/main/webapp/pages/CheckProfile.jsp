@@ -6,11 +6,12 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core"%>
 <html>
 <head>
   <html>
   <head>
-    <title>Сheck profile</title>
+    <title>${account.username} - Profile</title>
   </head>
   <body>
   <jsp:include page="_header.jsp"/>

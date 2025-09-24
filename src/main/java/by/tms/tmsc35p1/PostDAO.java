@@ -53,4 +53,17 @@ public class PostDAO extends HttpServlet {
         }
         return null;
     }
+
+    public List<Post> getAllPostsByUserIdSortedByDate(int userId) throws SQLException {
+        String sql = "SELECT * FROM posts WHERE user_id = ? ORDER BY created_at DESC";
+        List<Post> posts = new ArrayList<>();
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1,userId);
+            stmt.executeQuery();
+
+        } catch (SQLException e) {
+            throw new RuntimeException();
+        }
+        return null;
+    }
 }
