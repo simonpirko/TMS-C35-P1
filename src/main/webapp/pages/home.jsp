@@ -10,7 +10,6 @@
 <html>
 <head>
     <title>Twitter Clone</title>
-
 </head>
 <body>
 <jsp:include page="_header.jsp"/>

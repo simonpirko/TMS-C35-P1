@@ -136,6 +136,22 @@
                         <i class="bi bi-pencil me-2"></i>Edit Profile
                     </button>
                 </c:if>
+                <c:if test="${not empty currentUser && currentUser.id() != account.id()}">
+                    <form action="${pageContext.request.contextPath}/check-profile" method="post" class="d-inline">
+                        <input type="hidden" name="action" value="${isFollowing ? 'unfollow' : 'follow'}">
+                        <input type="hidden" name="profileId" value="${account.id()}">
+                        <button type="submit" class="btn ${isFollowing ? 'btn-outline-primary' : 'btn-primary'} rounded-pill px-4">
+                            <c:choose>
+                                <c:when test="${isFollowing}">
+                                    <i class="bi bi-person-check me-2"></i>Following
+                                </c:when>
+                                <c:otherwise>
+                                    <i class="bi bi-person-plus me-2"></i>Follow
+                                </c:otherwise>
+                            </c:choose>
+                        </button>
+                    </form>
+                </c:if>
             </div>
         </div>
     </div>
