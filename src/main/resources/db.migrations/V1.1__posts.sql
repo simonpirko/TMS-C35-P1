@@ -3,7 +3,8 @@ CREATE TABLE IF NOT EXISTS posts (
  title VARCHAR(200) NOT NULL,
  content TEXT NOT NULL,
 user_id INTEGER,
- created_at TIMESTAMP DEFAULT now()
+ created_at TIMESTAMP DEFAULT now(),
+    likes integer
 );
 
 alter table posts

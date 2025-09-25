@@ -24,10 +24,11 @@ public class PostDAO extends HttpServlet {
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
-                Post post = new Post(rs.getInt("id"), rs.getString("title"), rs.getString("content"), rs.getInt("user_id"), rs.getTimestamp("timestamp"));
+                Post post = new Post(rs.getInt("id"), rs.getString("title"), rs.getString("content"), rs.getInt("user_id"), rs.getTimestamp("timestamp"),rs.getInt("likes"));
                 post.setId(rs.getInt("id"));
                 post.setContent(rs.getString("content"));
                 post.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+                post.setLikes(rs.getInt("likes"));
                 posts.add(post);
             }
         }
@@ -46,7 +47,8 @@ public class PostDAO extends HttpServlet {
                             rs.getString("title"),
                             rs.getString("content"),
                             rs.getInt("user_id"),
-                            rs.getTimestamp("timestamp")
+                            rs.getTimestamp("timestamp"),
+                            rs.getInt("likes")
                     );
                 }
             }
@@ -65,5 +67,14 @@ public class PostDAO extends HttpServlet {
             throw new RuntimeException();
         }
         return null;
+    }
+
+    public void likePost(int postId) throws SQLException {
+
+        String sql = "UPDATE posts SET likes = likes + 1 WHERE id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, postId);
+            stmt.executeUpdate();
+        }
     }
 }
