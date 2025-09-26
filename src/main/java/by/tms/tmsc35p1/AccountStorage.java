@@ -17,7 +17,7 @@ public class AccountStorage {
 
     public boolean isUnique(Account account) {
         boolean flag = true;
-        try{
+        try {
             Connection conn = PostgresConnector.getConnection();
 
             conn.setAutoCommit(false);
@@ -40,9 +40,9 @@ public class AccountStorage {
         return flag;
     }
 
-    public Optional<Account> addAccount(Account account){
+    public Optional<Account> addAccount(Account account) {
         boolean result = false;
-                try {
+        try {
             Connection conn = PostgresConnector.getConnection();
             conn.setAutoCommit(false);
 
@@ -62,15 +62,15 @@ public class AccountStorage {
             }
             conn.commit();
             conn.close();
-return Optional.of(account);
+            return Optional.of(account);
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             Logger.getLogger(AccountStorage.class.getName()).log(Level.SEVERE, "Failed to create an account", e);
         }
         return Optional.empty();
     }
 
-    public Optional<Account> getAccountByUsername(String username, String password){
+    public Optional<Account> getAccountByUsername(String username, String password) {
         Account account = null;
         try {
             Connection conn = PostgresConnector.getConnection();
@@ -92,7 +92,7 @@ return Optional.of(account);
                     account = new Account(rs.getInt(1), rs.getString(2), rs.getString(3));
                 }
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             Logger.getLogger(AccountStorage.class.getName()).log(Level.SEVERE, "Failed to log in the account", e);
         }
         return Optional.ofNullable(account);
@@ -182,7 +182,7 @@ return Optional.of(account);
 
             conn.commit();
             conn.close();
-        } catch(Exception e) {
+        } catch (Exception e) {
             Logger.getLogger(AccountStorage.class.getName()).log(Level.SEVERE, "Failed to get account by id", e);
         }
         return Optional.ofNullable(account);

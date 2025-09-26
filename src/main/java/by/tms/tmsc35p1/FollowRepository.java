@@ -12,7 +12,14 @@ public class FollowRepository {
 
     private final String SQL_FOLLOW_STATEMENT = "INSERT INTO SUBSCRIPTIONS (follower_id, following_id) VALUES (?, ?)";
     private final String SQL_UNFOLLOW_STATEMENT = "DELETE FROM SUBSCRIPTIONS WHERE follower_id = ? AND following_id = ?";
-
+    private final String SQL_GET_ALL_FOLLOWERS = "select a.* " +
+            " from accounts a " +
+            " inner join subscriptions s on a.id = s.follower_id " +
+            " where following_id = ? ";
+    private final String SQL_GET_ALL_FOLLOWINGS = "select a.* " +
+            "from accounts a " +
+            "inner join subscriptions s on a.id = s.following_id " +
+            "where s.follower_id = ?; ";
 
     public void follow(int follower, int following) {
         try (Connection connection = PostgresConnector.getConnection();
@@ -41,15 +48,6 @@ public class FollowRepository {
             throw new RuntimeException(e);
         }
     }
-
-    private final String SQL_GET_ALL_FOLLOWERS = "select a.* " +
-            " from accounts a " +
-            " inner join subscriptions s on a.id = s.follower_id " +
-            " where following_id = ? ";
-    private final String SQL_GET_ALL_FOLLOWINGS = "select a.* " +
-            "from accounts a " +
-            "inner join subscriptions s on a.id = s.following_id " +
-            "where s.follower_id = ?; ";
 
     //получает всех подписчиков
     public Optional<List<Account>> getAllFollowers(int id) {
@@ -92,11 +90,11 @@ public class FollowRepository {
     public List<Account> getFollowingUsers(int userId) throws SQLException {
         List<Account> following = new ArrayList<>();
         String sql = """
-            SELECT a.id, a.username, a.password 
-            FROM accounts a
-            INNER JOIN subscriptions s ON a.id = s.following_id
-            WHERE s.follower_id = ?
-            """;
+                SELECT a.id, a.username, a.password 
+                FROM accounts a
+                INNER JOIN subscriptions s ON a.id = s.following_id
+                WHERE s.follower_id = ?
+                """;
 
         try (Connection conn = PostgresConnector.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {

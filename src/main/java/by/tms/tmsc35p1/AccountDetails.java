@@ -18,10 +18,8 @@ public record AccountDetails(
     }
 
 
-
-
     public AccountDetails(Integer accountId) {
-        this(accountId, null, null,null, null, null, null, null, null);
+        this(accountId, null, null, null, null, null, null, null, null);
     }
 
     @Override

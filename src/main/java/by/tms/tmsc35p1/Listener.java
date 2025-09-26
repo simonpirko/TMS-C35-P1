@@ -20,11 +20,11 @@ public class Listener implements ServletContextListener {
         }
 
         Flyway flyway = Flyway.configure()
-                    .dataSource(DB_URL, DB_USER, DB_PASSWORD)
-                    .locations("classpath:db.migrations")
-                    .load();
+                .dataSource(DB_URL, DB_USER, DB_PASSWORD)
+                .locations("classpath:db.migrations")
+                .load();
 
-            flyway.migrate();
+        flyway.migrate();
     }
 
 }

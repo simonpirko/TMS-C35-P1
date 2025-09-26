@@ -10,9 +10,11 @@ import java.util.List;
 
 public class FollowService {
     FollowRepository followRepository;
+
     public FollowService(FollowRepository followRepository) {
         this.followRepository = followRepository;
     }
+
     public boolean follow(int followerId, int followingId) throws SQLException {
         if (checkIfFollowing(followerId, followingId)) {
             return false;
@@ -31,10 +33,10 @@ public class FollowService {
         return false;
     }
 
-    public int getFollowersCount( int userId) throws SQLException {
+    public int getFollowersCount(int userId) throws SQLException {
         String sql = "SELECT COUNT(*) FROM subscriptions WHERE following_id = ?";
         try (Connection conn = PostgresConnector.getConnection();
-                PreparedStatement stmt = conn.prepareStatement(sql)) {
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, userId);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -44,10 +46,11 @@ public class FollowService {
         }
         return 0;
     }
+
     public int getFollowingCount(int userId) throws SQLException {
         String sql = "SELECT COUNT(*) FROM subscriptions WHERE follower_id = ?";
         try (Connection conn = PostgresConnector.getConnection();
-                PreparedStatement stmt = conn.prepareStatement(sql)) {
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, userId);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -72,7 +75,7 @@ public class FollowService {
     public boolean checkIfFollowing(int followerId, int followingId) throws SQLException {
         String sql = "SELECT 1 FROM subscriptions WHERE follower_id = ? AND following_id = ?";
         try (Connection conn = PostgresConnector.getConnection();
-                PreparedStatement stmt = conn.prepareStatement(sql)) {
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, followerId);
             stmt.setInt(2, followingId);
             try (ResultSet rs = stmt.executeQuery()) {

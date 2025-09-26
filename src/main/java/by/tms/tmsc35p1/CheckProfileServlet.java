@@ -5,21 +5,22 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import java.time.LocalDate;
 
 import java.io.IOException;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
 
 @WebServlet("/check-profile")
 public class CheckProfileServlet extends HttpServlet {
+    FollowService followService = new FollowService(new FollowRepository());
     private CommentStorage commentStorage;
 
-    public void init(){
+    public void init() {
         this.commentStorage = new CommentStorage();
     }
-
-    FollowService followService = new FollowService(new FollowRepository());
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -36,10 +37,10 @@ public class CheckProfileServlet extends HttpServlet {
 
         try (Connection conn = PostgresConnector.getConnection()) {
             String sql = "SELECT a.id, a.username,a.password," +
-                         "d.account_id, d.email, d.bio, d.location, d.website, d.birth_date,d.avatar_url, d.header_url " +
-                         "FROM accounts a " +
-                         "JOIN account_details d ON a.id = d.account_id " +
-                         "WHERE a.id = ?";
+                    "d.account_id, d.email, d.bio, d.location, d.website, d.birth_date,d.avatar_url, d.header_url " +
+                    "FROM accounts a " +
+                    "JOIN account_details d ON a.id = d.account_id " +
+                    "WHERE a.id = ?";
 
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                 stmt.setInt(1, Integer.parseInt(idParam));
@@ -56,6 +57,7 @@ public class CheckProfileServlet extends HttpServlet {
                         AccountDetails details = new AccountDetails(
                                 rs.getInt("account_id"),
                                 rs.getString("email"),
+                                rs.getString("gender"),
                                 rs.getString("bio"),
                                 rs.getString("location"),
                                 rs.getString("website"),
@@ -73,7 +75,7 @@ public class CheckProfileServlet extends HttpServlet {
                         if (currentUser != null) {
                             isFollowing = followService.checkIfFollowing(currentUser.id(), Integer.parseInt(idParam));
                         }
-                      
+
                         req.setAttribute("account", account);
                         req.setAttribute("accountDetails", details);
                         req.setAttribute("followersCount", followersCount);

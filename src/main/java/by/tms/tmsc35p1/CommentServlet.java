@@ -38,15 +38,10 @@ public class CommentServlet extends HttpServlet {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        CommentStorage.save(postId, commentAuthor,  commentText, avatarUrl);
+        CommentStorage.save(postId, commentAuthor, commentText, avatarUrl);
 
         String referer = req.getHeader("Referer");
         resp.sendRedirect(referer != null ? referer : req.getContextPath() + "/");
-
-
-
-
-
 
 
     }

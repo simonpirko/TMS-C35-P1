@@ -37,7 +37,7 @@ public class PostDAO extends HttpServlet {
 
     public Post getPostById(int id) throws SQLException {
         String sql = "SELECT * FROM posts WHERE id = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql);) {
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -58,12 +58,34 @@ public class PostDAO extends HttpServlet {
         String sql = "SELECT * FROM posts WHERE user_id = ? ORDER BY created_at DESC";
         List<Post> posts = new ArrayList<>();
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1,userId);
+            stmt.setInt(1, userId);
             stmt.executeQuery();
 
         } catch (SQLException e) {
             throw new RuntimeException();
         }
         return null;
+    }
+
+    public void likePost(int postId) {
+        String sql = "UPDATE posts SET likes = likes + 1 WHERE id = ?";
+        try (Connection connection1 = PostgresConnector.getConnection()) {
+            PreparedStatement preparedStatement = connection1.prepareStatement(sql);
+            preparedStatement.setInt(1, postId);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void unLikePost(int postId) {
+        String sql = "UPDATE posts SET likes = likes - 1 WHERE id = ?";
+        try (Connection connection1 = PostgresConnector.getConnection()) {
+            PreparedStatement preparedStatement = connection1.prepareStatement(sql);
+            preparedStatement.setInt(1, postId);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

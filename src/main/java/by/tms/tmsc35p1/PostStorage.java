@@ -1,7 +1,10 @@
 package by.tms.tmsc35p1;
 
 import javax.sql.DataSource;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +13,21 @@ public class PostStorage {
 
     public PostStorage(DataSource dataSource) {
         this.dataSource = dataSource;
+    }
+
+    public static void save(String title, String content, Integer user_id) {
+        String sql = "INSERT INTO posts (title, content, user_id, likes) VALUES (?, ?, ?, ?)";
+        try (Connection conn = PostgresConnector.getConnection()) {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, title);
+            ps.setString(2, content);
+            ps.setInt(3, user_id);
+            ps.setInt(4, 0);
+
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public List<Post> findByUserId(int userId) throws SQLException {
@@ -32,19 +50,5 @@ public class PostStorage {
             }
         }
         return posts;
-    }
-
-    public static void save(String title, String content, Integer user_id) {
-        String sql = "INSERT INTO posts (title, content, user_id) VALUES (?, ?, ?)";
-        try (Connection conn = PostgresConnector.getConnection()) {
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, title);
-            ps.setString(2, content);
-            ps.setInt(3, user_id);
-
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

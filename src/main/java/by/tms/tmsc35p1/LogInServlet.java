@@ -36,16 +36,14 @@ public class LogInServlet extends HttpServlet {
             String redirect = (String) session.getAttribute("redirect");
             session.setAttribute("account", account1);
             req.setAttribute("account", account1);
-            if(redirect != null && !redirect.isEmpty()) {
+            if (redirect != null && !redirect.isEmpty()) {
                 session.removeAttribute("redirect");
                 resp.sendRedirect(req.getContextPath() + redirect);
-            }
-            else {
+            } else {
                 resp.sendRedirect("/");
             }
 
-        }
-        else {
+        } else {
             errors.add("Invalid username or password");
             req.setAttribute("errors", errors);
             req.getServletContext().getRequestDispatcher("/pages/login.jsp").forward(req, resp);

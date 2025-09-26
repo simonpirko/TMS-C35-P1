@@ -43,17 +43,15 @@ public class SignUpServlet extends HttpServlet {
             errors.add("Passwords do not match.");
         }
 
-        if (!accountStorage.isUnique(account)){
+        if (!accountStorage.isUnique(account)) {
             errors.add("Account is already exists.");
         }
 
-        if(!password.equals(confirmPassword) || username.isBlank() || password.isBlank() || !accountStorage.isUnique(account))
-        {
+        if (!password.equals(confirmPassword) || username.isBlank() || password.isBlank() || !accountStorage.isUnique(account)) {
             errors.add("Failed to create account!");
             req.setAttribute("errors", errors);
             req.getServletContext().getRequestDispatcher("/pages/signup.jsp").forward(req, resp);
-        }
-        else {
+        } else {
             Optional<Account> createdAccountOpt = accountStorage.addAccount(account);
 
             if (createdAccountOpt.isPresent()) {
@@ -64,8 +62,7 @@ public class SignUpServlet extends HttpServlet {
                 AccountDetailsStorage detailsStorage = new AccountDetailsStorage();
                 detailsStorage.createAccountDetails(new AccountDetails(createdAccount.id()));
                 resp.sendRedirect("/");
-            }
-            else {
+            } else {
                 errors.add("Failed to add account to the database!");
                 req.setAttribute("errors", errors);
                 req.getServletContext().getRequestDispatcher("/pages/signup.jsp").forward(req, resp);

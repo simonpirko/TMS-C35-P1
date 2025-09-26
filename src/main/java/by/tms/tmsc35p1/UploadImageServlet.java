@@ -3,11 +3,8 @@ package by.tms.tmsc35p1;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import jakarta.servlet.http.Part;
+import jakarta.servlet.http.*;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
@@ -22,8 +19,8 @@ import java.util.UUID;
 )
 public class UploadImageServlet extends HttpServlet {
 
-    private final AccountDetailsStorage detailsStorage = new AccountDetailsStorage();
     private static final String UPLOAD_DIR = "uploads";
+    private final AccountDetailsStorage detailsStorage = new AccountDetailsStorage();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -81,7 +78,7 @@ public class UploadImageServlet extends HttpServlet {
             if (filePart != null && filePart.getSize() > 0) {
                 String originalFileName = getFileName(filePart);
                 String fileExtension = getFileExtension(originalFileName);
-                String uniqueFileName = UUID.randomUUID().toString() + fileExtension;
+                String uniqueFileName = UUID.randomUUID() + fileExtension;
 
                 String savedFileName = saveFile(filePart, uniqueFileName, req);
 

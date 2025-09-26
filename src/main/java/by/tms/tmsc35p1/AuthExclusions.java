@@ -1,6 +1,5 @@
 package by.tms.tmsc35p1;
 
-import java.util.HashSet;
 import java.util.Set;
 
 public class AuthExclusions {
@@ -9,6 +8,7 @@ public class AuthExclusions {
             "/login", // login
             "/signup" // signup
     );
+
     public static boolean isAuthExclusion(String path) {
         return authExclusions.contains(path);
     }

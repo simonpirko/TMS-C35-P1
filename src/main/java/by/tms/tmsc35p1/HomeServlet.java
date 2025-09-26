@@ -14,11 +14,11 @@ import java.util.List;
 public class HomeServlet extends HttpServlet {
     PostDAO postDAO;
 
-    FollowService followService;
+    private final FollowService followService = new FollowService(new FollowRepository());
 
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 
-        if(req.getSession().getAttribute("account") == null){
+        if (req.getSession().getAttribute("account") == null) {
             req.getServletContext().getRequestDispatcher("/pages/home.jsp").forward(req, res);
         }
 
@@ -28,7 +28,7 @@ public class HomeServlet extends HttpServlet {
 
         try {
             List<Integer> followingUsersIds = followService.getFollowingUsersIds(userId);
-            for(Integer followingUsersId : followingUsersIds){
+            for (Integer followingUsersId : followingUsersIds) {
                 postDAO.getAllPostsByUserIdSortedByDate(followingUsersId).forEach(post -> {
                     req.setAttribute("postId", post.id());
                     req.setAttribute("postTitle", post.title());

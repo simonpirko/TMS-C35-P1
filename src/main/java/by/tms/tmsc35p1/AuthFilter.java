@@ -27,7 +27,7 @@ public class AuthFilter implements Filter {
             chain.doFilter(request, response);
             return;
         }
-        if(!loggedIn) {
+        if (!loggedIn) {
             req.getSession(true).setAttribute("redirect", path);
             resp.sendRedirect(req.getContextPath() + "/login?error=auth");
             return;

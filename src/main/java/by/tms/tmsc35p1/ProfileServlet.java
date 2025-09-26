@@ -17,14 +17,14 @@ import java.util.Optional;
 @WebServlet("/profile")
 public class ProfileServlet extends HttpServlet {
 
-    FollowService followService = new FollowService(new FollowRepository());
     private final AccountDetailsStorage detailsStorage = new AccountDetailsStorage();
     private final AccountStorage accountStorage = new AccountStorage();
+    FollowService followService = new FollowService(new FollowRepository());
     private PostStorage postStorage;
     private CommentStorage commentStorage;
 
-    public void init(){
-        DataSource ds = (DataSource)getServletContext().getAttribute("ds");
+    public void init() {
+        DataSource ds = (DataSource) getServletContext().getAttribute("ds");
         this.postStorage = new PostStorage(ds);
         this.commentStorage = new CommentStorage();
     }
@@ -115,7 +115,6 @@ public class ProfileServlet extends HttpServlet {
         String location = req.getParameter("location");
         String website = req.getParameter("website");
         String birthDateStr = req.getParameter("birthDate");
-
 
 
         LocalDate birthDate = null;
